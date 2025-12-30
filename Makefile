@@ -7,11 +7,20 @@ createdb:
 dropdb: 
 	docker exec -it postgres18 dropdb simple_bank
 
+new_migration:
+	migrate create -ext sql -dir db/migration -seq $(name)
+
 migrateup: 
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose up
 
+migrateup1:
+	migrate -path db/migration -database "$(DB_URL)" -verbose up 1
+
 migratedown: 
 	migrate -path db/migration -database "postgresql://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
+
+migratedown1:
+	migrate -path db/migration -database "$(DB_URL)" -verbose down 1
 
 sqlc:
 	sqlc generate
@@ -25,4 +34,4 @@ server:
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/techschool/simplebank/db/sqlc Store
 
-.PHONY: postgres createdb dropdb migrateup migratedown sqlc test server mock
+.PHONY: postgres createdb dropdb new_migration migrateup migrateup1 migratedown migratedown1 sqlc test server mock

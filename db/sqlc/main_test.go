@@ -10,7 +10,7 @@ import (
 	"github.com/techschool/simplebank/util"
 )
 
-var testStore *Store
+var testStore Store
 var testQueries *Queries
 
 // var testDB *sql.DB
