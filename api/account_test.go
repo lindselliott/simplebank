@@ -89,7 +89,7 @@ func TestGetAccountAPI(t *testing.T) {
 				store.EXPECT().
 					GetAccount(gomock.Any(), gomock.Eq(account.ID)).
 					Times(1).
-					Return(db.Account{}, db.ErrRecordNotFound)
+					Return(db.Account{}, sql.ErrNoRows)
 			},
 			checkResponse: func(t *testing.T, recorder *httptest.ResponseRecorder) {
 				require.Equal(t, http.StatusNotFound, recorder.Code)
@@ -173,7 +173,7 @@ func TestCreateAccountAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.CreateAccountParams{
-					// Owner:    account.Owner,
+					Owner:    account.Owner,
 					Currency: account.Currency,
 					Balance:  0,
 				}
@@ -301,7 +301,7 @@ func TestListAccountsAPI(t *testing.T) {
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.ListAccountsParams{
-					// Owner:  user.Username,
+					Owner:  user.Username,
 					Limit:  int32(n),
 					Offset: 0,
 				}
